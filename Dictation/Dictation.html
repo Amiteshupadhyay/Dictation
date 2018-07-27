@@ -1,0 +1,91 @@
+<html>
+	<head>
+		<title>Speech Recoznition </title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Add icon library -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+		<style>
+		    
+			body{
+			font-family:verdana;
+			background:#ccc;
+			}
+			
+			#result{
+			position:absolute;
+			top:8%;
+			left:5%;
+			align:center;
+			height:250px;
+			width:90%;
+			background:white;
+			border:2px solid #ccc
+			padding:20px;
+			box-shadow:0 0 20px 0 #ccc
+			margin-botton:30px;
+			font-size:13px;
+			line-height:20px;
+			}
+			
+			.btn{
+			position:absolute;
+			background:white;
+			top:49%;
+			left:50%;
+			font-size:40px;
+			padding 5px;
+			border-radius:50%;
+			}
+			
+			.btn:hover {
+			 
+			color: red;
+			}
+			
+			</style>
+	</head>
+	
+	<body>
+		<h3 align="center"> Dictation </h3>
+		<div id = "result">
+		</div>	
+		<button class = "btn" onclick="startConverting()"><i class="fa fa-microphone"></i> </button>
+		<script>
+
+			var r = document.getElementById('result');
+
+			function startConverting () {
+				if('webkitSpeechRecognition' in window){
+					var speechRecognizer = new webkitSpeechRecognition();
+					speechRecognizer.continuous = true;
+					speechRecognizer.interimResults = true;
+					speechRecognizer.lang = 'en-IN';
+					speechRecognizer.start();
+
+					var finalTranscripts = '';
+
+					speechRecognizer.onresult = function(event){
+						var interimTranscripts = '';
+						for(var i = event.resultIndex; i < event.results.length; i++){
+							var transcript = event.results[i][0].transcript;
+							transcript.replace("\n", "<br>");
+							if(event.results[i].isFinal){
+								finalTranscripts += transcript;
+							}else{
+								interimTranscripts += transcript;
+							}
+						}
+						r.innerHTML = finalTranscripts + '<span style="color:red">' + interimTranscripts + '</span>';
+					};
+					speechRecognizer.onerror = function (event) {
+					};
+				}else{
+					r.innerHTML = 'Your browser is not supported. If google chrome, please upgrade!';
+				}
+			}
+
+			
+
+		</script>
+	</body>
+</html>
